@@ -7,22 +7,81 @@ Be creative! do whatever you want!
 - Start a web application
 - Import things from your .base module
 """
+import os.path
+from glob import glob
+import typer
+from pvplotter import base
+from base import PVdata
+
+app = typer.Typer()
+
+state = {"ftmpl": "*.csv", "pvdata": PVdata(ftmpl="*.csv")}
 
 
-def main():  # pragma: no cover
+@app.command()
+def interactive():
+    if state["ftmpl"] == "":
+        state["ftmpl"] = typer.prompt("Specify reports directory.")
+    load()
+    cmd = typer.prompt("Specify plot command.")
+    if cmd == "detection":
+        plot_detection()
+    elif cmd == "clear":
+        plot_clear()
+    elif cmd == "all-clear":
+        plot_all_clear()
+    elif cmd == "matching":
+        plot_matching()
+    else:
+        typer.echo(f"Unknown cmd: {cmd}")
+
+
+# @app.command()
+def load():
+    ftmpl = os.path.expanduser(state["ftmpl"])
+    typer.echo(f"Loading reports from: {ftmpl}")
+    if len(glob(ftmpl)) == 0:
+        print("No report file found!")
+        typer.Exit()
+    state["pvdata"] = base.PVdata(ftmpl)
+    typer.echo(f"{state['pvdata']}")
+
+
+@app.command()
+def plot_detection():
+    if state["pvdata"] is None:
+        load()
+    base.plotDetection(state["pvdata"])
+
+
+@app.command()
+def plot_matching(day: str):
+    if state["pvdata"].num_reports == 0:
+        load()
+    base.plotMatchingDates(state["pvdata"], day)
+
+
+@app.command()
+def plot_clear():
+    if state["pvdata"] is None:
+        load()
+    base.plotClear(state["pvdata"])
+
+
+@app.command()
+def plot_all_clear():
+    if state["pvdata"] is None:
+        load()
+    base.plotAllClear(state["pvdata"])
+
+
+@app.callback()
+def main(ftmpl: str = "*.csv"):
     """
-    The main function executes on commands:
-    `python -m pvplotter` and `$ pvplotter `.
-
-    This is your program's entry point.
-
-    You can change this function to do whatever you want.
-    Examples:
-        * Run a test suite
-        * Run a server
-        * Do some other stuff
-        * Run a command line application (Click, Typer, ArgParse)
-        * List all available tasks
-        * Run an application (Flask, FastAPI, Django, etc.)
+    Manage users in the awesome CLI app.
     """
-    print("This will do something")
+    if ftmpl != "*.csv":
+        state["ftmpl"] = ftmpl
+    else:
+        state["ftmpl"] = typer.prompt("Specify reports path template")
+    load()
