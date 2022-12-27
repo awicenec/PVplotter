@@ -18,7 +18,7 @@ import typer
 NAME = "PVplotter"
 import os
 from glob import glob
-from typing import Union, Type
+from typing import Type, Union
 
 import numpy as np
 import pandas as pd
@@ -27,7 +27,7 @@ from pandas.tseries.offsets import DateOffset
 
 
 class PVdata:
-    def __init__(self, ftmpl: str = "*.csv"):
+    def __init__(self, ftmpl: str = "Weekly_*.csv"):
         self.clearDays = pd.Series(dtype="datetime64[ns]")
         self.sumWh_clear = None
         self.n_days = None
@@ -48,9 +48,10 @@ class PVdata:
 
     def __str__(self):
         rep = f"Number of days in reports: {self.n_days}\n"
-        rep += f"Number of clear days: {len(self.clearDays)}\n"
-        rep += f"Dimmest day: {self.sumWh.idxmin()}\n"
-        rep += f"Brightest day: {self.sumWh.idxmax()}\n"
+        if self.num_reports > 0:
+            rep += f"Number of clear days: {len(self.clearDays)}\n"
+            rep += f"Dimmest day: {self.sumWh.idxmin()}\n"
+            rep += f"Brightest day: {self.sumWh.idxmax()}\n"
         return rep
 
     def _check_reports(self):
@@ -119,7 +120,7 @@ def plotClear(pvdata: Type[PVdata]):
         plt.show()
 
 
-def plotMatchingDates(pvdata: Type[PVdata], date: Union[str, None] = None):
+def plotMatchingDates(date: Union[str, None], pvdata: Type[PVdata]):
     """
     Plots the data from a single day and the data from the
     matching day one year later.
