@@ -6,6 +6,9 @@ Be creative! do whatever you want!
 - Use builtin argparse
 - Start a web application
 - Import things from your .base module
+TODO: Error handling when CSV content wrong
+TODO: Documentation update
+TODO: Quit option in plot_clean
 """
 import os.path
 
@@ -40,6 +43,9 @@ def interactive():
 
 # @app.command()
 def load():
+    ftmpl = os.path.expanduser(state["ftmpl"])
+    typer.echo(f"Loading reports from: {ftmpl}")
+    state["pvdata"] = PVdata(ftmpl)
     while state["pvdata"].num_reports == 0 and state["ftmpl"] not in ["q", "Q"]:
         typer.echo(f"No reports found using template: {state['ftmpl']}!")
         state["ftmpl"] = typer.prompt("Specify reports path template")
@@ -88,5 +94,4 @@ def main(ftmpl: str = DEFAULT_FTMPL):
     """
     if ftmpl != DEFAULT_FTMPL:
         state["ftmpl"] = ftmpl
-    else:
-        load()
+    load()
