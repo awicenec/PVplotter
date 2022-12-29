@@ -1,6 +1,6 @@
 import os
 from glob import glob
-from typing import Type, Union
+from typing import Union
 
 import numpy as np
 import pandas as pd
@@ -94,7 +94,7 @@ class PVdata:
             self.clearDays.index = dcc.index + DateOffset(hours=12)
 
 
-def plotClear(pvdata: Type[PVdata]):
+def plotClear(pvdata: PVdata):
     dataFrame = pvdata.df
     dates = pvdata.clearDays.index
     for d in dates:
@@ -104,7 +104,7 @@ def plotClear(pvdata: Type[PVdata]):
         plt.show()
 
 
-def plotMatchingDates(date: Union[str, None], pvdata: Type[PVdata]):
+def plotMatchingDates(date: Union[str, None], pvdata: PVdata):
     """
     Plots the data from a single day and the data from the
     matching day one year later.
@@ -134,7 +134,7 @@ def plotMatchingDates(date: Union[str, None], pvdata: Type[PVdata]):
     plt.show()
 
 
-def plotDetection(pvdata: Type[PVdata]):
+def plotDetection(pvdata: PVdata):
     dataFrame = pvdata.df
     dataFrame["[Wh]"].plot()
     dataFrame.iloc[pvdata.cloudFilter]["[Wh]"].plot(style="r+")
@@ -150,7 +150,7 @@ def plotDetection(pvdata: Type[PVdata]):
     plt.show()
 
 
-def plotAllClear(pvplot: Type[PVdata]):
+def plotAllClear(pvplot: PVdata):
     dataFrame = pvplot.df
     t0 = dataFrame.index.min()
     for d in pvplot.clearDays.index:
