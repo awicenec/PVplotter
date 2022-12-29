@@ -12,10 +12,9 @@ TODO: Quit option in plot_clean
 """
 import os.path
 
-import typer
-
 from pvplotter import base
 from pvplotter.base import PVdata
+import typer
 
 DEFAULT_FTMPL = "Weekly_*.csv"
 app = typer.Typer()
@@ -46,7 +45,10 @@ def load():
     ftmpl = os.path.expanduser(state["ftmpl"])
     typer.echo(f"Loading reports from: {ftmpl}")
     state["pvdata"] = PVdata(ftmpl)
-    while state["pvdata"].num_reports == 0 and state["ftmpl"] not in ["q", "Q"]:
+    while state["pvdata"].num_reports == 0 and state["ftmpl"] not in [
+        "q",
+        "Q",
+    ]:
         typer.echo(f"No reports found using template: {state['ftmpl']}!")
         state["ftmpl"] = typer.prompt("Specify reports path template")
         ftmpl = os.path.expanduser(state["ftmpl"])
@@ -68,9 +70,9 @@ def plot_detection():
 
 @app.command()
 def plot_matching(day: str):
-    if state["pvdata"].num_reports == 0: # type: ignore
+    if state["pvdata"].num_reports == 0:  # type: ignore
         load()
-    base.plotMatchingDates(day, state["pvdata"]) # type: ignore
+    base.plotMatchingDates(day, state["pvdata"])  # type: ignore
 
 
 @app.command()

@@ -1,21 +1,3 @@
-"""
-pvplotter base module.
-
-This is the principal module of the pvplotter project.
-here you put your main classes and objects.
-
-Be creative! do whatever you want!
-
-If you want to replace this with a Flask application run:
-
-    $ make init
-
-and then choose `flask` as template.
-"""
-import typer
-
-# example constant variable
-NAME = "PVplotter"
 import os
 from glob import glob
 from typing import Type, Union
@@ -24,6 +6,8 @@ import numpy as np
 import pandas as pd
 from matplotlib.pylab import plt
 from pandas.tseries.offsets import DateOffset
+
+NAME = "PVplotter"
 
 
 class PVdata:
@@ -154,7 +138,7 @@ def plotDetection(pvdata: Type[PVdata]):
     dataFrame = pvdata.df
     dataFrame["[Wh]"].plot()
     dataFrame.iloc[pvdata.cloudFilter]["[Wh]"].plot(style="r+")
-    (pvdata.clearDays**0).plot(style="g^")
+    (pvdata.clearDays ** 0).plot(style="g^")
     plt.vlines(
         x=pvdata.clearDays.index,
         ymin=0,
