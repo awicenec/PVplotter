@@ -11,6 +11,7 @@ TODO: Documentation update
 TODO: Quit option in plot_clean
 """
 import typer
+from rich import print as rprint
 import datetime
 import os.path
 from typing import Union, cast, Callable, TypedDict, Iterable
@@ -55,19 +56,19 @@ def _enter_date_format(day: str) -> str:
         try:
             datetime.datetime.strptime(day, "%Y-%m-%d")
         except (ValueError, TypeError):
-            typer.echo("Invalid date format! Try 'YYYY-MM-DD'")
+            rprint("[red]Invalid date format![/red] Try 'YYYY-MM-DD'")
             return ""
         day_date = datetime.date.fromisoformat(day)
         if day_date >= min_date and day_date <= max_date:
             return str(day)
         elif day_date < min_date or day_date > max_date:
-            typer.echo(
-                f"Specified date {day_date} outside range {min_date} to {max_date}"
+            rprint(
+                f"[red]Specified date {day_date} outside range {min_date} to {max_date}[/red]"
             )
             day = ""
 
         elif day_date not in state["pvdata"].dateInd:
-            typer.echo(f"Date {day} is not available!")
+            rprint(f"[red]Date {day} is not available![/red]")
             day = ""
 
 
@@ -82,17 +83,19 @@ def _load(ftmpl: str = DEFAULT_FTMPL):
         "Q",
     ]:
         ftmpl = os.path.expanduser(str(state["ftmpl"]))
-        typer.echo(f"Loading reports from: {ftmpl}")
+        rprint(f"Loading reports from: {ftmpl}")
         pvdata = PVdata(ftmpl)
         state["pvdata"] = pvdata
         state["num_reports"] = pvdata.num_reports
         if state["num_reports"] == 0:
-            typer.echo(f"No reports found using path: {state['ftmpl']}!")
+            rprint(
+                f"[red]No reports found using path: {state['ftmpl']}![/red]"
+            )
             state["ftmpl"] = typer.prompt(
                 "Specify reports path template or 'q' to quit"
             )
     if state["ftmpl"] in ["q", "Q"]:
-        typer.echo("No reports found!")
+        rprint("[red]No reports found![/red]")
         raise typer.Exit()
 
 
@@ -161,9 +164,9 @@ def clear():
     if state["num_reports"] == 0:
         _load()
     dates = state["pvdata"].clearDays.index
-    typer.echo(f"Cycling through {len(dates)} clear days")
+    rprint(f"Cycling through {len(dates)} clear days")
     for d in dates:
-        typer.echo(f"Plotting {str(d.date())}")
+        rprint(f"Plotting {str(d.date())}")
         state = base.plotClear(state, date=d)
         cmd = typer.prompt(
             "Sub-commands of clear: [c]ontinue or [q]uit, default:",
@@ -240,7 +243,7 @@ CMDS["quit"]: CMDclass = {  # type: ignore
 def interactive(cmd: Union[str, None]):
     cmds: Iterable[str] = [str(c["display"]) for c in CMDS.values()]
     if cmd is None:
-        typer.echo(f"available commands: {', '.join(cmds)}.")
+        print(f"available commands: {', '.join(cmds)}.")
         cmd = typer.prompt("Specify plot command").lower()
         if cmd.lower() in ["q", "quit"]:
             raise typer.Exit()
@@ -255,7 +258,7 @@ def interactive(cmd: Union[str, None]):
                 exec_fl = True
                 plt.show()
         if not exec_fl:
-            typer.echo(f"Unknown cmd: {cmd}")
+            rprint(f"[red]Unknown cmd:[/red] {cmd}")
             interactive(None)
         # cmd = ""
         # cmd = typer.prompt("Additional plot command, or 'q' to quit").lower()

@@ -5,7 +5,7 @@ from typing import Union
 import numpy as np
 import pandas as pd
 import typer
-import datetime
+from rich import print as rprint
 from matplotlib.pylab import plt
 from pandas.tseries.offsets import DateOffset
 
@@ -17,7 +17,7 @@ NAME = "PVplotter"
 def _check_figure(state: dict):
     fig = state["figure"]
     if fig == "":
-        typer.echo("Initializing figure")
+        rprint("Initializing figure")
         plt.ion()
         fig = plt.figure(0)
         state["figure"] = fig
@@ -176,13 +176,15 @@ def plotMatchingDates(
     if mflag:
         m_date = (day + DateOffset(years=1)).date()
         if m_date > max(pvdata.dateInd):
-            typer.echo(f"Warning: matching date ({m_date}) is in the future!")
+            rprint(
+                f"[red]Warning: matching date ({m_date}) is in the future![/red]"
+            )
             mflag = False
         elif m_date not in pvdata.dateInd:
-            typer.echo(f"Matching date {m_date} not available!")
+            rprint(f"[red]Matching date {m_date} not available![/red]")
             mflag = False
         else:
-            print(f"Comparing {day} with {m_date}")
+            rprint(f"Comparing {day} with {m_date}")
         d1 = dataFrame.at[str(m_date), "[Wh]"]
         t1 = pd.to_datetime(dataFrame.at[str(m_date), "[dd.MM.yyyy HH:mm]"])
         t1 = pd.Series(t1).dt.time
@@ -198,12 +200,12 @@ def plotMatchingDates(
             title=title,
         )
     else:
-        typer.echo(f"Date {day} contains only NaN values")
+        rprint(f"[red]Date {day} contains only NaN values![/red]")
     if mflag:
         if not df_t1[m_date].isnull().values.all():
             df_t1.plot(label=str(m_date), ax=ax)
         else:
-            typer.echo(f"Date {m_date} contains only NaN values")
+            rprint(f"[red]Date {m_date} contains only NaN values![/red]")
 
     return state
 
