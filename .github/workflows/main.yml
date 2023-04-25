@@ -32,7 +32,7 @@ jobs:
         run: make lint
 
   tests_linux:
-    needs: [linter, pytest, codecov]
+    needs: linter
     strategy:
       fail-fast: false
       matrix:
@@ -54,7 +54,7 @@ jobs:
         #   fail_ci_if_error: true
 
   tests_mac:
-    needs: [linter, pytest, codecov]
+    needs: linter
     strategy:
       fail-fast: false
       matrix:
@@ -72,7 +72,7 @@ jobs:
         run: make test
 
   tests_win:
-    needs: [linter, pytest, codecov]
+    needs: linter
     strategy:
       fail-fast: false
       matrix:
