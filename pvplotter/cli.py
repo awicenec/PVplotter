@@ -1,14 +1,4 @@
 """CLI interface for pvplotter project.
-
-Be creative! do whatever you want!
-
-- Install click or typer and create a CLI app
-- Use builtin argparse
-- Start a web application
-- Import things from your .base module
-TODO: Error handling when CSV content wrong
-TODO: Documentation update
-TODO: Quit option in plot_clean
 """
 import typer
 from rich import print as rprint
