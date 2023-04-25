@@ -43,13 +43,14 @@ def _enter_date_format(day: str) -> str:
         day: str
 
     """
-    min_date = state["pvdata"].dateInd.min()
-    max_date = state["pvdata"].dateInd.max()
+    min_date = state["pvdata"].dateInd.min()  # type: ignore
+    max_date = state["pvdata"].dateInd.max()  # type: ignore
 
     while True:
         if day == "" or isinstance(day, typer.models.ArgumentInfo):
             day = typer.prompt(
-                f"Specify initial date between {str(min_date)} and {str(max_date)} (or 'q' to quit)"
+                f"Specify initial date between {str(min_date)} and "
+                + "{str(max_date)} (or 'q' to quit)"
             ).lower()
         if day == "q":
             return ""
@@ -63,11 +64,12 @@ def _enter_date_format(day: str) -> str:
             return str(day)
         elif day_date < min_date or day_date > max_date:
             rprint(
-                f"[red]Specified date {day_date} outside range {min_date} to {max_date}[/red]"
+                f"[red]Specified date {day_date} outside range {min_date} to "
+                + "{max_date}[/red]"
             )
             day = ""
 
-        elif day_date not in state["pvdata"].dateInd:
+        elif day_date not in state["pvdata"].dateInd:  # type: ignore
             rprint(f"[red]Date {day} is not available![/red]")
             day = ""
 

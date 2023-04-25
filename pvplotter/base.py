@@ -4,7 +4,6 @@ from typing import Union
 
 import numpy as np
 import pandas as pd
-import typer
 from rich import print as rprint
 from matplotlib.pylab import plt
 from pandas.tseries.offsets import DateOffset
@@ -177,7 +176,8 @@ def plotMatchingDates(
         m_date = (day + DateOffset(years=1)).date()
         if m_date > max(pvdata.dateInd):
             rprint(
-                f"[red]Warning: matching date ({m_date}) is in the future![/red]"
+                f"[red]Warning: matching date ({m_date}) is in the "
+                + "future![/red]"
             )
             mflag = False
         elif m_date not in pvdata.dateInd:
