@@ -168,7 +168,9 @@ def plotMatchingDates(
     if isinstance(day, str):
         day = dataFrame.loc[day].index[0].date()
     d0 = dataFrame.at[str(day), "[Wh]"]
-    t0 = pd.to_datetime(dataFrame.at[str(day), "[dd.MM.yyyy HH:mm]"])
+    t0 = pd.to_datetime(
+        dataFrame.at[str(day), "[dd.MM.yyyy HH:mm]"], dayfirst=True
+    )
     t0 = pd.Series(t0).dt.time
     df_t0 = pd.DataFrame(d0, index=t0, columns=[day])
 
