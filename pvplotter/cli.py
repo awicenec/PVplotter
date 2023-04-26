@@ -143,7 +143,9 @@ def matching(day: str = "", mflag: bool = True):
     if state["num_reports"] == 0:  # type: ignore
         _load()
     day = _enter_date_format(day)
-    state = base.plotMatchingDates(state, day, mflag=mflag)  # type: ignore
+    if day != "":
+        state = base.plotMatchingDates(state, day, mflag=mflag)  # type: ignore
+
     interactive(None)
 
 

@@ -165,7 +165,7 @@ def plotMatchingDates(
     pvdata = state["pvdata"]
     dataFrame = pvdata.df
     _ = _check_figure(state)
-    if isinstance(day, str):
+    if isinstance(day, str) and day != "":
         day = dataFrame.loc[day].index[0].date()
     d0 = dataFrame.at[str(day), "[Wh]"]
     t0 = pd.to_datetime(
