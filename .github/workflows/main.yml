@@ -29,7 +29,7 @@ jobs:
       - name: Install Poetry
         uses: snok/install-poetry@v1
       - name: Install project
-        run: poetry make install
+        run: poetry run make install
       - name: Run linter
         run: poetry run make lint
 
@@ -49,7 +49,7 @@ jobs:
       - name: Install Poetry
         uses: snok/install-poetry@v1
       - name: Install project
-        run: poetry make install
+        run: poetry run make install
       - name: Run tests
         run: poetry run make test
       - name: "Upload coverage to Codecov"
@@ -73,6 +73,6 @@ jobs:
       - name: Install Poetry
         uses: snok/install-poetry@v1
       - name: Install project
-        run: poetry make install
+        run: poetry run make install
       - name: Run tests
         run: poetry run make test
