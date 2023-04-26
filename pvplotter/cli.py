@@ -138,6 +138,13 @@ def date(
 def matching(day: str = "", mflag: bool = True):
     """
     Show one day and the same day one year later in a single plot.
+
+    Args:
+
+        day:    The ISO date string in the form 'YYYY-MM-DD' ['']
+
+        mflag: Flag indicating whether the matching date a year after
+                    <day> should be plotted as well [True]
     """
     global state
     if state["num_reports"] == 0:  # type: ignore
@@ -196,9 +203,15 @@ def main(ftmpl: str = DEFAULT_FTMPL):
 
 
 class CMDclass(TypedDict):
-    display: str
-    abbrev: str
-    function: Callable
+    """
+    Small class to define the required values for a command. Instances
+    of this class are used in the CMDS dict to define the set of commands
+    available.
+    """
+
+    display: str  # the name string used to present to the user
+    abbrev: str  # the abbreviation to call the command
+    function: Callable  # The function to be executed
 
 
 CMDS = {}
@@ -235,6 +248,15 @@ CMDS["quit"]: CMDclass = {  # type: ignore
 
 
 def interactive(cmd: Union[str, None]):
+    """
+    Main function controlling the interactive part of this program. It
+    prompts for commands until the user enters 'q' to quit. The available
+    commands are defined using the CMDS dictionary above, where every
+    entry is a CMDclass TypedDict.
+
+    Args:
+        cmd Union[str, None]: The initial command string or None
+    """
     cmds: Iterable[str] = [str(c["display"]) for c in CMDS.values()]
     if cmd is None:
         print(f"available commands: {', '.join(cmds)}.")
